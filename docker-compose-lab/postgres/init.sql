@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS posts (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    author VARCHAR(50) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO posts (title, author, content)
+VALUES
+('Docker Compose 실습 시작', 'admin', 'PostgreSQL 초기 테이블 생성이 완료되었습니다.'),
+('Mini Board 예제', 'admin', 'Node.js에서 작성한 게시글은 PostgreSQL에 저장됩니다.');

@@ -1,0 +1,15 @@
+{
+  "name": "docker-compose-board-web",
+  "version": "1.0.0",
+  "description": "Simple Node.js board app for Docker Compose lab",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.18.3",
+    "pg": "^8.11.5",
+    "ioredis": "^5.3.2"
+  }
+}
