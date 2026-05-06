@@ -112,3 +112,13 @@ button:hover {
   border-radius: 10px;
   background-color: #fafafa;
 }
+
+.message-box {
+  background-color: #e7f7ec;
+  border-left: 5px solid #2e8b57;
+  padding: 14px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  color: #1f5f3b;
+  font-weight: bold;
+}

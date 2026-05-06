@@ -19,19 +19,24 @@ app.get("/health", (req, res) => {
   res.status(200).send("OK");
 });
 
+async function renderBoard(req, res, message = "") {
+  const visitCount = await increaseVisitCount();
+  const posts = await getPosts();
+
+  res.render("index", {
+    hostname,
+    visitCount,
+    posts,
+    message
+  });
+}
+
 app.get("/", async (req, res) => {
   try {
-    const visitCount = await increaseVisitCount();
-    const posts = await getPosts();
-
-    res.render("index", {
-      hostname,
-      visitCount,
-      posts
-    });
+    await renderBoard(req, res);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send("게시판 목록을 불러오는 중 오류가 발생했습니다.");
   }
 });
 
@@ -41,21 +46,21 @@ app.post("/posts", async (req, res) => {
 
     await createPost(title, author, content);
 
-    res.redirect("/");
+    await renderBoard(req, res, "게시글이 저장되었습니다.");
   } catch (err) {
     console.error(err);
-    res.status(500).send("Failed to create post");
+    res.status(500).send("게시글 저장 중 오류가 발생했습니다.");
   }
 });
 
-app.post("/delete/:id", async (req, res) => {
+app.post("/delete", async (req, res) => {
   try {
-    await deletePost(req.params.id);
+    await deletePost(req.body.id);
 
-    res.redirect("/");
+    await renderBoard(req, res, "게시글이 삭제되었습니다.");
   } catch (err) {
     console.error(err);
-    res.status(500).send("Failed to delete post");
+    res.status(500).send("게시글 삭제 중 오류가 발생했습니다.");
   }
 });
 
