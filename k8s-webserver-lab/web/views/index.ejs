@@ -1,54 +1,59 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Kubernetes Mini Board</title>
-  <link rel="stylesheet" href="/style.css" />
+
+  <!-- VSCode proxy 환경에서는 /style.css 대신 상대 경로 사용 -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1>Kubernetes Mini Board</h1>
 
     <div class="info-box">
-      <div><span>Node.js Server Hostname:</span> <%= hostname %></div>
-      <div><span>Redis Visit Count:</span> <%= visitCount %></div>
-      <div><span>Database:</span> PostgreSQL</div>
-      <div><span>Request Flow:</span> Nginx → Node.js → Redis / PostgreSQL</div>
+      <p>Node.js Server Hostname: <strong><%= hostname %></strong></p>
+      <p>Redis Visit Count: <strong><%= visitCount %></strong></p>
+      <p>Database: <strong>PostgreSQL</strong></p>
+      <p>Request Flow: Nginx → Node.js → Redis / PostgreSQL</p>
     </div>
 
     <% if (message) { %>
-      <div class="message-box"><%= message %></div>
+      <div class="message">
+        <%= message %>
+      </div>
     <% } %>
 
     <h2>게시글 작성</h2>
-    <form class="write-form" method="POST" action="/posts">
-      <input type="text" name="title" placeholder="제목" required />
-      <input type="text" name="author" placeholder="작성자" required />
+
+    <!-- /posts가 아니라 posts로 작성 -->
+    <form method="POST" action="posts" class="post-form">
+      <input type="text" name="title" placeholder="제목" required>
+      <input type="text" name="author" placeholder="작성자" required>
       <textarea name="content" placeholder="내용" required></textarea>
       <button type="submit">게시글 등록</button>
     </form>
 
     <h2>게시글 목록</h2>
 
-    <% if (posts.length === 0) { %>
-      <div class="empty">등록된 게시글이 없습니다.</div>
-    <% } %>
+    <div class="post-list">
+      <% posts.forEach(function(post) { %>
+        <div class="post-card">
+          <h3><%= post.title %></h3>
+          <p class="meta">
+            작성자: <%= post.author %> |
+            작성 시각: <%= post.created_at %>
+          </p>
+          <p><%= post.content %></p>
 
-    <% posts.forEach(function(post) { %>
-      <div class="post">
-        <div class="post-title"><%= post.title %></div>
-        <div class="post-meta">
-          작성자: <%= post.author %> |
-          작성시간: <%= new Date(post.created_at).toLocaleString() %>
+          <!-- /delete가 아니라 delete로 작성 -->
+          <form method="POST" action="delete">
+            <input type="hidden" name="id" value="<%= post.id %>">
+            <button type="submit" class="delete-button">삭제</button>
+          </form>
         </div>
-        <div class="post-content"><%= post.content %></div>
-        <form method="POST" action="/delete">
-          <input type="hidden" name="id" value="<%= post.id %>" />
-          <button class="delete-btn" type="submit">삭제</button>
-        </form>
-      </div>
-    <% }); %>
+      <% }) %>
+    </div>
   </div>
 </body>
 </html>
