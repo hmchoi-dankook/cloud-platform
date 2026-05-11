@@ -12,10 +12,10 @@ TAR_PATH="/tmp/kubernetes-lab-web.tar"
 cd "$ROOT_DIR"
 
 echo "[1/3] Docker image build: $IMAGE_NAME"
-docker build -t "$IMAGE_NAME" ./web
+sudo docker build -t "$IMAGE_NAME" ./web
 
 echo "[2/3] Docker image save: $TAR_PATH"
-docker save "$IMAGE_NAME" -o "$TAR_PATH"
+sudo docker save "$IMAGE_NAME" -o "$TAR_PATH"
 
 echo "[3/3] Import image into MicroK8s containerd"
 sudo microk8s ctr image import "$TAR_PATH"
