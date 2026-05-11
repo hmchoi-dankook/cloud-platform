@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kubernetes Mini Board</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Kubernetes Mini Board</h1>
+
+    <div class="info-box">
+      <div><span>Node.js Server Hostname:</span> <%= hostname %></div>
+      <div><span>Redis Visit Count:</span> <%= visitCount %></div>
+      <div><span>Database:</span> PostgreSQL</div>
+      <div><span>Request Flow:</span> Nginx → Node.js → Redis / PostgreSQL</div>
+    </div>
+
+    <% if (message) { %>
+      <div class="message-box"><%= message %></div>
+    <% } %>
+
+    <h2>게시글 작성</h2>
+    <form class="write-form" method="POST" action="/posts">
+      <input type="text" name="title" placeholder="제목" required />
+      <input type="text" name="author" placeholder="작성자" required />
+      <textarea name="content" placeholder="내용" required></textarea>
+      <button type="submit">게시글 등록</button>
+    </form>
+
+    <h2>게시글 목록</h2>
+
+    <% if (posts.length === 0) { %>
+      <div class="empty">등록된 게시글이 없습니다.</div>
+    <% } %>
+
+    <% posts.forEach(function(post) { %>
+      <div class="post">
+        <div class="post-title"><%= post.title %></div>
+        <div class="post-meta">
+          작성자: <%= post.author %> |
+          작성시간: <%= new Date(post.created_at).toLocaleString() %>
+        </div>
+        <div class="post-content"><%= post.content %></div>
+        <form method="POST" action="/delete">
+          <input type="hidden" name="id" value="<%= post.id %>" />
+          <button class="delete-btn" type="submit">삭제</button>
+        </form>
+      </div>
+    <% }); %>
+  </div>
+</body>
+</html>
