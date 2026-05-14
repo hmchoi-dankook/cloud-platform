@@ -34,7 +34,12 @@ async function renderBoard(req, res, message = "") {
 
 app.get("/", async (req, res) => {
   try {
-    await renderBoard(req, res);
+
+    // url로 전달된 message 받아오기
+    const message = req.query.msg != null ? req.query.msg : ""; 
+
+    await renderBoard(req, res, message);
+
   } catch (err) {
     console.error(err);
     res.status(500).send("게시판 목록을 불러오는 중 오류가 발생했습니다.");
@@ -46,7 +51,11 @@ app.post("/posts", async (req, res) => {
     const { title, author, content } = req.body;
 
     await createPost(title, author, content);
-    await renderBoard(req, res, "게시글이 저장되었습니다.");
+
+    // await renderBoard(req, res, "게시글이 저장되었습니다.");
+    const message = "게시글이 저장되었습니다.";
+    res.redirect(`./?msg=${message}`);
+
   } catch (err) {
     console.error(err);
     res.status(500).send("게시글 저장 중 오류가 발생했습니다.");
@@ -56,7 +65,11 @@ app.post("/posts", async (req, res) => {
 app.post("/delete", async (req, res) => {
   try {
     await deletePost(req.body.id);
-    await renderBoard(req, res, "게시글이 삭제되었습니다.");
+
+    // await renderBoard(req, res, "게시글이 삭제되었습니다.");
+    const message = "게시글이 삭제되었습니다.";
+    res.redirect(`./?msg=${message}`); // 프록시 환경이기 때문에 상대 경로 필요
+
   } catch (err) {
     console.error(err);
     res.status(500).send("게시글 삭제 중 오류가 발생했습니다.");
